@@ -23,18 +23,23 @@ Task can be completed either with react or vanilla js. For react implementations
 Your task is to create simple todo list app.
 
 1. Fetch data from our mock API
-2. Render it into a list with two(2) sections: "pending" and "done".
-3. Add functionality to mark task as done. Marking task as done/undone should re-locate to corresponding section.
+2. Render it into two columns: "pending" and "done".
+3. Add functionality to mark task as done. Marking task as done/undone should re-locate to corresponding column.
 4. Style the list according the designs below
+5. **BONUS** implement [HTML Drag and Drop API](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API) to drag tasks from one column to the other. [W3schools](https://www.w3schools.com/html/html5_draganddrop.asp) example is good enough for mvp.
 
-**NOTE:** Incase you want to display loader (you really should) use, with react change `class` -> `className`
+End result should look somehting like this. Theme is presetted in `main.css`
+![Design](TodoDesign.png)
+
+## Icons
+
+Project contains a subset of FontAwesome icons: icon for each task and a spinner. Icons are used with like so:
 
 ```
 <i class="fad fa-spinner-third fa-spin fa-fw"></i>
 ```
 
-End result should look somehting like this. Theme is presetted in `main.css`
-![Design](TodoDesign.png)
+**NOTE** use this for spinner (DOM example).
 
 ## Mock API
 
@@ -60,6 +65,12 @@ ToDoItem {
     id: Number
     done: Boolean
 }
+```
+
+**NOTE** To display icon of the task in DOM assign the `icon` string as `class`/`className` for `i` -tag. Below is a react example.
+
+```
+<i className={ToDoItem.icon}></i>
 ```
 
 ### `MockAPI.getTodos`
