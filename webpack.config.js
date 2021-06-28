@@ -41,6 +41,9 @@ module.exports = {
     ],
   },
   resolve: {
+    alias: {
+      MockApi: path.resolve(__dirname, 'src', 'MockApi'),
+    },
     extensions: ['.js', '.jsx', '.scss', '.css'],
   },
   plugins: [

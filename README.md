@@ -35,7 +35,7 @@ End result should look somehting like this. Theme is presetted in `main.css`
 
 Project contains a subset of FontAwesome icons: icon for each task and a spinner. Icons are used with like so:
 
-```
+```html
 <i class="fad fa-spinner-third fa-spin fa-fw"></i>
 ```
 
@@ -45,10 +45,10 @@ Project contains a subset of FontAwesome icons: icon for each task and a spinner
 
 Below is documentation for our Promise -based mock API. All reponses have `Content-Type: application/json` Create new instance of mock API:
 
-```
-import MockAPI from './MockAPI'
+```javascript
+import MockApi from 'MockApi';
 
-const api = new MockAPI();
+const api = new MockApi();
 ```
 
 **NOTE:** Api usage examples expect that you have initialized api as above
@@ -70,12 +70,12 @@ ToDoItem {
 **NOTE** To display icon of the task in DOM assign the `icon` string as `class`/`className` for `i` -tag. Below is a react example.
 
 ```
-<i className={ToDoItem.icon}></i>
+<i className={ToDoItem.icon} />
 ```
 
 ### `MockAPI.getTodos`
 
-Returns a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) object similar to `fetch`.
+Returns a [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) object similar to `fetch`.
 
 ```
 Response {
@@ -88,7 +88,10 @@ Response {
 
 Extract data from reponse with `body.json()` method.
 
-```
-const response = await api.getTodos();
-const todos = await response.json();
+```javascript
+async function getData() {
+  const response = await api.getTodos();
+  const todos = await response.json();
+  // ... do something with todos
+}
 ```
