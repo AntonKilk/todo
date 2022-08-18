@@ -1,5 +1,5 @@
 import React from 'react';
 
-const App = () => <div></div>;
+const App = () => <p>React app works!</p>;
 
 export default App;

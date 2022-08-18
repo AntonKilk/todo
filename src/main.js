@@ -4,72 +4,135 @@ import MockAPI from './MockApi/index';
 
 const api = new MockAPI();
 
+// create two divs - pending and done
+const mainDiv  = document.getElementById("app");
+
+const pending = document.createElement("div");
+pending.classList.add("pending");
+mainDiv.append(pending);
+
+const done = document.createElement("div");
+done.classList.add("done");
+mainDiv.append(done);
+
+// add dragging option
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  const data = ev.dataTransfer.getData("text");
+  const task = document.getElementById(data);
+  const checkbox = task.querySelector(".checkbox");
+  const parent = ev.target.parentNode;
+
+  if (ev.target.id === "dropZone2") {
+    task.classList.add("completed");
+    for (const key in api.todos) {
+      if (parseInt(data, 10)  === api.todos[key].id)
+        api.todos[key].done = true;
+    }
+  }
+
+  if (ev.target.id === "dropZone1") {
+    task.classList.remove("completed");
+    for (const key in api.todos) {
+      if (parseInt(data, 10) === api.todos[key].id)
+        api.todos[key].done = false;
+    }
+  }
+
+  if (task.classList.contains("completed")) {
+    checkbox.checked = true;
+    parent.insertBefore(task, ev.target);
+  }
+  else {
+    checkbox.checked = false;
+    parent.insertBefore(task, ev.target);
+  }
+}
+
+function addDragging(){
+  const dragInPending = document.createElement("div");
+  dragInPending.innerText = "Drag n'drop here";
+  dragInPending.classList.add("drag");
+  dragInPending.setAttribute("id", "dropZone1");
+  pending.appendChild(dragInPending);
+  dragInPending.addEventListener("dragover", allowDrop);
+  dragInPending.addEventListener("drop", drop);
+
+  const dragInDone = document.createElement("div");
+  dragInDone.innerText = "Drag n'drop here";
+  dragInDone.classList.add("drag");
+  dragInDone.setAttribute("id","dropZone2");
+  done.appendChild(dragInDone);
+  dragInDone.addEventListener("dragover", allowDrop);
+  dragInDone.addEventListener("drop", drop);
+}
+
 function DisplayTodos () {
-  const todoList = document.querySelector("#app");
-  console.log(todoList);
-  todoList.innerHTML = "";
+  const pendingList = document.querySelector(".pending");
+  pendingList.innerHTML = "<h2>Todo</h2>";
+
+  const doneList = document.querySelector(".done");
+  doneList.innerHTML = "<h2>Done</h2>";
 
   api.todos.forEach(todo => {
     const todoItem = document.createElement("div");
+
     todoItem.classList.add("todo-item");
+    todoItem.setAttribute("draggable", "true");
+    todoItem.setAttribute("id", `${todo.id}`);
+    todoItem.addEventListener("dragstart", drag);
+    const icon = document.createElement('i');
+    icon.className = `${todo.icon}`;
+    todoItem.appendChild(icon);
 
     const task = document.createElement('div');
-    const description = document.createElement('div');
-    const icon = document.createElement('i');
-
-    task.innerHTML = `<input type="text" value="${todo.task}" readonly>`;
-    description.innerHTML = `<input type="text" value="${todo.description}" readonly>`;
-
-    task.appendChild(description);
+    task.innerHTML = `<h3>${todo.task}</h3>`;
+    task.classList.add("task");
     todoItem.appendChild(task);
-    todoList.appendChild(todoItem);
 
+    const description = document.createElement('div');
+    description.innerHTML = `${todo.description}`;
+    description.classList.add("desc");
+    task.appendChild(description);
+
+    const input = document.createElement('input');
+    input.type = "checkbox";
+    input.classList.add("checkbox");
+    todoItem.appendChild(input);
+
+    if (todo.done) {
+			todoItem.classList.add('completed');
+		}
+
+    input.addEventListener('change', (e) => {
+      todo.done = e.target.checked;
+      if (e.target.checked) {
+				todoItem.classList.add("completed");
+			} else {
+				todoItem.classList.remove("completed");
+			}
+      DisplayTodos();
+    });
+
+    if (todoItem.classList.contains("completed")){
+      input.checked = true;
+      doneList.appendChild(todoItem);
+    } else {
+      input.checked = false;
+      pendingList.appendChild(todoItem);
+    }
   });
+  addDragging();
 }
 
 window.addEventListener('load', () => {
-  DisplayTodos();
+    DisplayTodos();
 });
-
-// function createLi(className){
-//   const li= document.createElement("li");
-//   li.classList.add(className);
-//   return li;
-// }
-
-// api.todos.forEach(item => {
-//   console.log(item.task);
-// })
-
-// function showTasks (list) {
-//   for (list)
-// }
-// function createList(todos) {
-//   const liPending = document.createElement("li");
-//   ulPending.append(liPending);
-//   liPending.classList.add("liPending");
-//   liPending.innerHTML = todos[0].task;
-// }
-
-// for (let i = 0, l = api.todos.length; i < l; i++) {
-//     const obj = api.todos[i];
-//     console.log(obj);
-// }
-
-// create two lists for tasks: "pending" and "done"
-// const node = document.getElementById("app");
-// const mainDiv = document.createElement("div");
-// node.append(mainDiv);
-//
-// const pending = document.createElement("div");
-// const done = document.createElement("div");
-// mainDiv.append(pending);
-// mainDiv.append(done);
-//
-// function createUl(className){
-//   const ul = document.createElement("ul");
-//   ul.classList.add(className);
-//   return ul;
-// }
-// pending.append(createUl("pending"));
-// done.append(createUl("done"));
